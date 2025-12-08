@@ -698,7 +698,7 @@ You are a versatile task execution agent with full tool access, capable of handl
 								max_tokens: config.maxTokens || 4096,
 								tools: allowedTools,
 								sessionId: currentSession?.id,
-								disableThinking: true, // Sub-agents 不使用 Extended Thinking
+								// Enable Extended Thinking for sub-agents (inherited from main config)
 								configProfile: agent.configProfile,
 								customSystemPromptId: agent.customSystemPrompt,
 								customHeaders: agent.customHeaders,

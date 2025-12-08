@@ -884,6 +884,24 @@ export async function handleConversationWithTools(
 					setStreamTokenCount,
 
 					async subAgentMessage => {
+						// Handle sub-agent reasoning state (Extended Thinking support)
+						if (subAgentMessage.message.type === 'reasoning_started') {
+							setIsReasoning?.(true);
+							return; // Don't process further for reasoning_started event
+						}
+						if (subAgentMessage.message.type === 'reasoning_delta') {
+							// Keep reasoning state active during delta events
+							// Content will be accumulated in subAgentExecutor
+							return; // Don't process further for reasoning_delta event
+						}
+						// When content or tool_calls start, reasoning is done
+						if (
+							subAgentMessage.message.type === 'content' ||
+							subAgentMessage.message.type === 'tool_calls'
+						) {
+							setIsReasoning?.(false);
+						}
+
 						// Handle sub-agent messages - display and save to session
 						setMessages(prev => {
 							// Handle tool calls from sub-agent
